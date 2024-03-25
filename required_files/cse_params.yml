@@ -1,0 +1,244 @@
+protocol:
+    cdd: '3b'
+    dri_qtot: '2b'
+    dri: '2b'
+    heatwave: '3b'
+    iavar: '2b'
+    iavar_qtot: '2b'
+    precip: '3b'
+    seas: '2b'
+    seas_qtot: '2b'
+    sdd: '3b'
+    sdd_24p0: '3b'
+    sdd_20p0: '3b'
+    sdd_18p3: '3b'
+    tr20: '3b'
+    wsi: '2b'
+
+indicators:
+    cdd:
+        cdd:
+            short_name: 'cdd'
+            long_name: 'Consecutive dry days'
+            unit: "days/yr"
+            ind_min: 0
+            ind_max: 180
+            ind_cmap: 'YlOrRd'
+            diff: relative
+            diff_min: -20
+            diff_max: 20
+            diff_cmap: 'RdBu_r'
+    dri:
+        drought_intensity:
+            short_name: 'dri'
+            long_name: 'Drought intensity'
+            unit: '-'
+            ind_min: 0
+            ind_max: 1730
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -20
+            diff_max: 20
+            diff_cmap: 'RdBu_r'
+    dri_qtot:
+        drought_intensity:
+            short_name: 'dri_qtot'
+            long_name: 'Drought intensity (Runoff)'
+            unit: '-'
+            ind_min: 0
+            ind_max: 210
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -20
+            diff_max: 20
+            diff_cmap: 'RdBu_r'
+    heatwave:
+        no_of_events:
+            short_name: 'hw'
+            long_name: 'Heatwave events'
+            unit: 'events/yr'
+            ind_min: 0
+            ind_max: 10
+            ind_cmap: 'YlOrRd'
+            diff: relative
+            diff_min: 0
+            diff_max: 1500
+            diff_cmap: 'Reds'
+    iavar:
+        ia_var:
+            short_name: 'iavar'
+            long_name: 'Inter-annual variability'
+            unit: '-'
+            ind_min: -1
+            ind_max: 1
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -50
+            diff_max: 50
+            diff_cmap: 'RdBu_r'
+    iavar_qtot:
+        ia_var:
+            short_name: 'iavar_qtot'
+            long_name: 'Inter-annual variability (Runoff)'
+            unit: '-'
+            ind_min: -1
+            ind_max: 1
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -50
+            diff_max: 50
+            diff_cmap: 'RdBu_r'
+    precip:
+        r10:
+            short_name: 'pr_r10'
+            long_name: 'Heavy precipitation days'
+            unit: 'days/yr'
+            ind_min: 0
+            ind_max: 70
+            ind_cmap: 'YlGnBu'
+            diff: relative
+            diff_min: -90
+            diff_max: 90
+            diff_cmap: 'BrBG'
+        r20:
+            short_name: 'pr_r20'
+            long_name: 'Very heavy precipitation days'
+            unit: 'days/yr'
+            ind_min: 0
+            ind_max: 30
+            ind_cmap: 'YlGnBu'
+            diff: relative
+            diff_min: -180
+            diff_max: 180
+            diff_cmap: 'BrBG'
+        r95p:
+            short_name: 'pr_r95p'
+            long_name: 'Wet days'
+            unit: 'mm/yr'
+            ind_min: 0
+            ind_max: 820
+            ind_cmap: 'YlGnBu'
+            diff: relative
+            diff_min: -60
+            diff_max: 60
+            diff_cmap: 'BrBG'
+        r99p:
+            short_name: 'pr_r99p'
+            long_name: 'Very wet days'
+            unit: 'mm/yr'
+            ind_min: 0
+            ind_max: 330
+            ind_cmap: 'YlGnBu'
+            diff: relative
+            diff_min: -100
+            diff_max: 100
+            diff_cmap: 'BrBG'
+        sdii:
+            short_name: 'sdii'
+            long_name: 'Precipitation intensity index'
+            unit: 'mm/day'
+            ind_min: 0
+            ind_max: 10
+            ind_cmap: 'YlGnBu'
+            diff: relative
+            diff_min: -20
+            diff_max: 20
+            diff_cmap: 'BrBG'
+    seas:
+        seasonality:
+            short_name: 'seas'
+            long_name: 'Seasonality'
+            unit: '-'
+            ind_min: 0
+            ind_max: 2
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -40
+            diff_max: 40
+            diff_cmap: 'RdBu_r'
+    seas_qtot:
+        seasonality:
+            short_name: 'seas_qtot'
+            long_name: 'Seasonality (Runoff)'
+            unit: '-'
+            ind_min: 0
+            ind_max: 2
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -40
+            diff_max: 40
+            diff_cmap: 'RdBu_r'
+            score_range: [60, 22, 13, 0]
+    sdd:
+        sdd_c:
+            short_name: 'sdd_c'
+            long_name: 'Cooling degree days (26 °C)'
+            unit: 'CDD/yr'
+            ind_min: 0
+            ind_max: 1830
+            ind_cmap: 'viridis'
+            diff: relative
+            diff_min: -4990
+            diff_max: 4990
+            diff_cmap: 'RdBu_r'
+    sdd_24p0:
+        sdd_c:
+            short_name: 'sdd_c_24p0'
+            long_name: 'Cooling degree days (24 °C)'
+            unit: 'CDD/yr'
+            ind_min: 0
+            ind_max: 1830
+            ind_cmap: 'viridis'
+            diff: relative
+            diff_min: -4990
+            diff_max: 4990
+            diff_cmap: 'RdBu_r'
+    sdd_20p0:
+        sdd_c:
+            short_name: 'sdd_c_20p0'
+            long_name: 'Cooling degree days (20 °C)'
+            unit: 'CDD/yr'
+            ind_min: 0
+            ind_max: 1830
+            ind_cmap: 'viridis'
+            diff: relative
+            diff_min: -4990
+            diff_max: 4990
+            diff_cmap: 'RdBu_r'
+    sdd_18p3:
+        sdd_c:
+            short_name: 'sdd_c_18p3'
+            long_name: 'Cooling degree days (18.3 °C)'
+            unit: 'CDD/yr'
+            ind_min: 0
+            ind_max: 1830
+            ind_cmap: 'viridis'
+            diff: relative
+            diff_min: -4990
+            diff_max: 4990
+            diff_cmap: 'RdBu_r'
+    tr20:
+        max_dur:
+            short_name: 'tr20'
+            long_name: 'Tropical nights'
+            unit: 'consecutive days'
+            ind_min: 0
+            ind_max: 350
+            ind_cmap: 'YlOrRd'
+            diff: relative
+            diff_min: 0
+            diff_max: 5170
+            diff_cmap: 'Reds'
+    wsi:
+        wsi:
+            short_name: 'wsi'
+            long_name: 'Water stress index'
+            unit: '-'
+            ind_min: 0
+            ind_max: 1
+            ind_cmap: 'gist_earth'
+            diff: relative
+            diff_min: -1910
+            diff_max: 1910
+            diff_cmap: 'RdBu_r'
+
