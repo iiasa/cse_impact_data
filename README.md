@@ -1,3 +1,11 @@
+# Overview
+
+This repository contains the scripts used to create the data for the [Climate Solutions Explorer](www.climate-solutions-explorer.eu). 
+
+![CSE](https://github.com/iiasa/cse_impact_data/assets/91878469/1e6ea586-3be3-45d5-9928-78024d4b86f5)
+
+The data are publicly available and can be downloaded from [https://zenodo.org/doi/10.5281/zenodo.7971429](https://zenodo.org/doi/10.5281/zenodo.7971429) (v0.4) (Werning et al., 2023). 
+
 # Data and data storage
 
 All scripts in this repository are designed to use ISIMIP2b or ISIMIP3b data as input for the calculation of the indicators. ISIMIP data can be downloaded from https://data.isimip.org/. The scripts for the indicator calculation expect the ISIMIP data to be stored using the following folder structure:
