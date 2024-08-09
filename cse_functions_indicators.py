@@ -222,10 +222,6 @@ def calculate_annual_drought_intensity(data, quantiles, input_var):
             
     drought_intensity_annual = deficit_annual_sum / duration_annual_sum
     
-    drought_intensity_annual = xr.where(duration_annual_sum < 182, np.nan, drought_intensity_annual)
-    deficit_annual_sum = xr.where(duration_annual_sum < 182, np.nan, deficit_annual_sum)
-    duration_annual_sum = xr.where(duration_annual_sum < 182, np.nan, duration_annual_sum)
-    
     return xr.merge([drought_intensity_annual.rename({input_var: 'drought_intensity'}), \
                      deficit_annual_sum.rename({input_var: 'deficit'}), \
                      duration_annual_sum.rename({input_var: 'duration'})])   

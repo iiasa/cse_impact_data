@@ -69,7 +69,7 @@ for GHM, GCM, RCP in it.product(GHMs, GCMs, RCPs):
             data_ref = data_ref * land_area['area'] * 1e-3
     
         # Calculate quantiles
-        dri_q90_ref = cf.calculate_quantiles(data_ref, 0.9, 50)
+        dri_q90_ref = cf.calculate_quantiles(data_ref, 0.1, 50)
 
         # Calculate indicator for all 31 years and average over all years
         dri = cfi.calculate_annual_drought_intensity(data_ref[input_var], 
