@@ -78,6 +78,9 @@ Scripts are numbered in the order that they should be executed in. The following
 - Can be run in two modes: COUNTRIES (almost 200 countries) or R10 (R10 regions & EU)
 - Can be run for any of the multi-model ensemble statistics (set in variable *stat*)
 
+### 100_*
+- Script for creating figures
+
 # Required files
 
 ### cse_params.yaml
