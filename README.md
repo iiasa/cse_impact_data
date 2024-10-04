@@ -58,28 +58,30 @@ Scripts are numbered in the order that they should be executed in. The following
 - Calculate indicator 'Water stress index'
 - Second part of calculation
 
-### 02_cse_calculate_multi_model_means.py
+### 02_cse_calculate_difference_bivariate_scores.py
+- Calculate relative differences and bivariate scores for all ensemble members and all indicators
+
+### 03_cse_calculate_multi_model_stats.py
 - Calculate multi-model ensemble statistics for all indicators
 
-### 03_cse_postprocessing_bivariate_scores.py 
-- Calculate relative differences and bivariate scores for all indicators except from heatwave
-- Can be run for any of the multi-model ensemble statistics (set in variable *stat*)
-
-### 04_cse_postprocessing_bivariate_scores_heatwave.py
-- Calculate relative differences and bivariate scores for indicator 'Heatwave events'
-- Can be run for any of the multi-model ensemble statistics (set in variable *stat*)
-
-### 04_cse_postprocessing_split_indicators.py 
+### 04_cse_split_indicators.py
 - Split multi-model ensemble, difference, and score datasets into separate files 
 - Can be run for any of the multi-model ensemble statistics (set in variable *stat*)
 
-### 05_cse_table_output_scaling.py 
+### 05_cse_raster_prep.py
+- Prepare population and land area weighted country and region rasters for the table output
+
+### 06_cse_table_output.py
 - Create the table output for all indicators
-- Can be run in two modes: COUNTRIES (almost 200 countries) or R10 (R10 regions & EU)
-- Can be run for any of the multi-model ensemble statistics (set in variable *stat*)
+- Calculates statistics for all ensemble members and also adds percentiles and means across all ensemble members (model: Climate Solutions)
+- Can be run in four modes: COUNTRIES, IPCC (IPCC WGI AR6 regions), R10 (R10 regions & EU) or R5 (UN R5 regions)
+
+### 07_cse_table_output_avoided_impacts.py
+- Calculate avoided impacts compared to 1.5°C based on the table output
+- Can be run in four modes: COUNTRIES, IPCC (IPCC WGI AR6 regions), R10 (R10 regions & EU) or R5 (UN R5 regions)
 
 ### 100_*
-- Script for creating figures
+- Scripts for creating figures
 
 # Required files
 
@@ -98,6 +100,9 @@ Scripts are numbered in the order that they should be executed in. The following
 - NetCDF file with grid area
 - Based on file from Yusuke Satoh, adapted by Edward Byers
 
+### IPCC-WGI-reference-regions_fractional_mask.nc4
+- NetCDF file with IPCC AR6 WGI regions based on Iturbide et al. (2020), available at https://doi.org/10.5194/essd-12-2959-2020.
+
 ### ISIMIP2b_GCM_GMT_1661_2099.xlsx & ISIMIP3b_GCM_GMT_1601_2100.xlsx
 - Excel files containing temperature anomalies for all GCM/RCP combinations for ISIMIP2b and ISIMIP3b data
 - Created using 00_isimip_calculate_gcm_gmt.py
@@ -111,8 +116,14 @@ Scripts are numbered in the order that they should be executed in. The following
 - NetCDF file with grid area
 - Based on file from Yusuke Satoh, adapted by Edward Byers
 
+### landcovermasks.nc4
+- NetCDF file containing SiB2 land types, made from GWSP2 by Yusuke Satoh
+
 ### region_classification.xlsx
 - Excel file containing region classifications and mapping from countries to R10 regions
 - Based on IPCC. 2022a. “Annex II: Definitions, Units and Conventions.” In Climate Change 2022: Mitigation of Climate Change. Contribution of Working Group III to the Sixth Assessment Report of the Intergovernmental Panel on Climate Change, edited by A Al Khourdaje, R. van Dieman, W.F. Lamb, M. Pathak, A. Reisinger, S. de la Rue du Can, J. Skea, R. Slade, S. Some, and L. Steg, 1st ed., 1821–40. Cambridge, UK and New York, NY, USA: Cambridge University Press. https://doi.org/10.1017/9781009157926.021.
+
+### style.mplstyle
+- mplstyle file with parameters for the figures
 
 
