@@ -64,6 +64,16 @@ indicators:
             diff_min: 0
             diff_max: 1500
             diff_cmap: 'Reds'
+        dot:            
+            short_name: 'hwd'
+            long_name: 'Heatwave events - days over threshold'
+            unit: 'days/yr'
+            ind_min: 0
+            ind_max: 365
+            ind_cmap: 'YlOrRd'
+            diff: relative
+            diff_min: 0
+            diff_max: 7000
     iavar:
         ia_var:
             short_name: 'iavar'

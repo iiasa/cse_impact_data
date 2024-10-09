@@ -12,6 +12,7 @@ import xarray as xr
 from scipy.interpolate import interp1d
 import yaml
 import math 
+import glob
 
 # -----------------------------------------------------------------------------
 
@@ -48,21 +49,7 @@ def apply_land_mask(data, land_mask):
             - land_mask: land mask to only keep land area ''' 
     
     return data.where(land_mask['land area'] > 0)
-   
-#------------------------------------------------------------------------------
-
-def set_interpolation(interpolation):
-    
-    ''' Set string to specify interpolation option if used
-    
-        Arguments:
-            - interpolation: string specifying used interpolation'''
-
-    if interpolation:
-        return f'_{interpolation}'
-    else:
-        return ''
-    
+      
 #------------------------------------------------------------------------------
 
 def load_multi_model_means(input_dir, protocol, ind, version, SOC=''):
@@ -121,10 +108,7 @@ def load_multi_model_files(input_dir, protocol, file_type, ind, version, interpo
             data_set = f'ISIMIP{protocol}_{file_type}_historical_{ind}{soc}.nc4'
         
         else: 
-           data_set = f'ISIMIP{protocol}_{file_type}_{ind}{soc}{interpolation}.nc4' 
-        
-        
-        
+           data_set = f'ISIMIP{protocol}_{file_type}_{ind}{soc}{interpolation}.nc4'
            
         with xr.open_dataset(os.path.join(input_dir, data_set), engine="netcdf4") as ds:
             return ds.load()
@@ -361,3 +345,116 @@ def calculate_bivariate_scores(future, hist, std, ind, protocol, kg_class):
     future_bivariate = xr.where(no_hist_binned >= 0, no_hist_binned, future_bivariate) 
 
     return future_bivariate
+
+# -----------------------------------------------------------------------------
+
+def create_esm_file_list(input_dir, GCMs, RCPs, ind, GWL, GHMs='', SOCs=''):
+    
+    ''' Create file list with all ensemble member files
+    
+        Arguments:
+            - input_dir: path to directory containing input data
+            - GCMs: list of strings with GCM names
+            - RCPs: list of strings with RCP names
+            - ind: indicator name
+            - GWL: global warming level
+            - GHMs: list of strings with GHM names (hydrology indicators only)
+            - SOCs: list of strings with SOC names (hydrology indicators only)
+    '''
+    
+    if SOCs and GHMs: 
+    
+        if type(SOCs) == str:
+            files = sum([glob.glob(os.path.join(input_dir, GHM, RCP, GCM, f'{GHM}_{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{SOCs}_{ind}_global_*')) \
+                      for GHM, GCM, RCP in it.product(GHMs, GCMs, RCPs)], [])            
+            return [file for file in files if not any(sub in file for sub in ['abs', 'diff', 'score'])]
+        
+        elif type(SOCs) == list:
+            files = sum([glob.glob(os.path.join(input_dir, GHM, RCP, GCM, f'{GHM}_{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{SOC}_{ind}_global_*')) \
+                      for GHM, GCM, RCP, SOC in it.product(GHMs, GCMs, RCPs, SOCs)], [])
+            return [file for file in files if not any(sub in file for sub in ['abs', 'diff', 'score'])]                 
+                
+        else:
+            print('Wrong input format for SOC')
+            
+    else:
+        files = sum([glob.glob(os.path.join(input_dir, RCP, GCM, f'{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{ind}_global_*')) \
+                  for GCM, RCP in it.product(GCMs, RCPs)], [])            
+        return [file for file in files if not any(sub in file for sub in ['abs', 'diff', 'score'])]
+            
+
+# -----------------------------------------------------------------------------
+            
+def load_kg_class(kg_class_path):
+    
+    ''' Load Koeppen-Geiger classes
+    
+        Arguments:
+            - kg_class_path: list with path to Koeppen-Geiger netCDF file
+    '''
+    
+    with xr.open_dataset(kg_class_path, engine="netcdf4") as kg_class:
+        kg_class.load()
+    return kg_class.sel(band=0)
+
+#------------------------------------------------------------------------------
+
+def create_esm_multi_model_stats(input_dir, GCMs, RCPs, GWLs, ftype, var, GHMs='', SOC=''):
+    
+    ''' Calculate multi-model ensemble statistics
+    
+        Arguments:
+            - input_dir: path to directory containing input data
+            - GCMs: list of strings with GCM names
+            - RCPs: list of strings with RCP names
+            - GWLs: list of floats with GWLs
+            - ftype: string with file type
+            - var: variable name
+            - GHMs: list of strings with GHM names (hydrology indicators only)
+            - SOCs: list of strings with SOC names (hydrology indicators only)
+    '''
+    
+    data_all = xr.Dataset()
+    thrshld = []
+    
+    for GWL in GWLs:
+        
+        if SOC and GHMs: 
+        
+            if type(SOC) == str:            
+                files = sum([glob.glob(os.path.join(input_dir, GHM, RCP, GCM, f'{GHM}_{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{SOC}_{var}_global_*{ftype}*')) \
+                          for GHM, GCM, RCP in it.product(GHMs, GCMs, RCPs)], [])
+            
+            elif type(SOC) == list:            
+                files = sum([glob.glob(os.path.join(input_dir, GHM, RCP, GCM, f'{GHM}_{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{SOCS}_{var}_global_*{ftype}*')) \
+                          for GHM, GCM, RCP, SOCS in it.product(GHMs, GCMs, RCPs, SOC)], [])                
+                    
+            else:
+                print('Wrong input format for SOC')
+                
+        else:            
+            files = sum([glob.glob(os.path.join(input_dir, RCP, GCM, f'{GCM.lower()}_{RCP}_{str(GWL).replace(".", "p")}_{var}_global_*{ftype}*')) \
+                      for GCM, RCP in it.product(GCMs, RCPs)], [])
+        
+        if len(files) <= 2:    
+            continue
+        
+        else:
+            
+            thrshld.append(GWL)            
+            
+            data = xr.open_mfdataset(files, combine='nested', concat_dim='GCM_RCP', chunks={'lon':400, 'lat':200, 'time': 400})                
+                            
+            data_qnt = data.chunk(dict(GCM_RCP=-1)).quantile([0.05, 0.25, 0.5, 0.75, 0.95], dim='GCM_RCP') \
+                        .assign_coords({'quantile': ['q5', 'q25', 'q50', 'q75', 'q95']}).rename({'quantile': 'stats'})
+            
+            data = xr.concat([data.min(dim='GCM_RCP'), data.mean(dim='GCM_RCP'), 
+                              data.median(dim='GCM_RCP'), data.max(dim='GCM_RCP'), \
+                              data.std(dim='GCM_RCP'), \
+                              data.std(dim='GCM_RCP')/data.mean(dim='GCM_RCP')], dim='stats') \
+                              .assign_coords({"stats": ['min', 'mean', 'median', 'max', 'stdev', 'rsd']})               
+            data = xr.concat([data, data_qnt], dim='stats')
+         
+        data_all = xr.concat([data_all, data], dim='threshold')
+      
+    return data_all.assign_coords({'threshold': thrshld})

@@ -321,9 +321,25 @@ def calculate_quantiles(data, quantile_value, chunksize):
 
 #------------------------------------------------------------------------------
 
+def load_netcdf(file_path):
+    
+    ''' Load netcdf files
+    
+        Arguments:
+            - file_path: path to netcdf file'''
+            
+    try:
+        with xr.open_dataset(file_path, engine="netcdf4") as ds:
+            return ds.load()
+    except:
+        print('Not a netcdf file')
+        
+#------------------------------------------------------------------------------
+
 def create_multi_model_stats(input_dir, GCMs, RCPs, thresholds, var, GHMs='', SOC=''):
     
-    ''' Calculate quantiles 
+    ''' Calculate multi model ensemble statistics for all combinations
+        contributing to each GWL
     
         Arguments:
             - input_dir: path to directory containing all the raw data
