@@ -144,6 +144,7 @@ def cust_attrs_twb_qnts(GCM, RCP, threshold, years, protocol, quantiles):
                 'netCDF format': netcdf4_format,
                 'software': 'File written using Python xarray'
                  }
+    
 #------------------------------------------------------------------------------
 
 def cust_attrs_heatwave(GCM, RCP, threshold, years, protocol, dt, quantiles):
@@ -226,65 +227,6 @@ def cust_attrs_wsi(GHM, GCM, RCP, SOC, input_var, threshold, years, protocol):
                 'netCDF format': netcdf4_format,
                 'software': 'File written using Python xarray'
                  }
-
-#------------------------------------------------------------------------------
-
-def cust_attrs_ari(GHM, GCM, RCP, SOC, input_var, threshold, years, protocol):
-
-        return {'title': 'Aridity index: Post-processed ISIMIP GHM data', 
-                'file created by': 'M. Werning, Y. Satoh & E. Byers',
-                'contact': 'werning@iiasa.ac.at',
-                'institution': 'IIASA',
-                'date': str(datetime.now()), 
-                'original source': f'ISIMIP{protocol} GCM data see www.isimip.org',
-                'input data': f'{input_var} created with adapted script by Y. Satoh',
-                'GHM': GHM,
-                'GCM': GCM,        
-                'scenario': RCP,
-                'social forcing': SOC, 
-                'warming': str(threshold),
-                'years': f'{years[0]}-{years[1]}',
-                'netCDF format': netcdf4_format,
-                'software': 'File written using Python xarray'
-                 }
-
-#------------------------------------------------------------------------------
-
-def cust_attrs_lc(GCM, RCP, threshold, years, protocol):
-
-        return {'title': 'Land cover: Post-processed GLOBIOM data', 
-                'file created by': 'M. Werning & E. Byers',
-                'contact': 'werning@iiasa.ac.at',
-                'institution': 'IIASA',
-                'date': str(datetime.now()), 
-                'original source': 'GLOBIOM data provided by Stefan Frank (frank@iiasa.ac.at)',          
-                'GCM': GCM,        
-                'scenario': RCP,
-                'warming': str(threshold),
-                'unit': 'percentage',
-                'years': f'{years[0]}-{years[1]}',
-                'netCDF format': netcdf4_format,
-                'software': 'File written using Python xarray'
-                 }
-    
-#------------------------------------------------------------------------------
-
-def cust_attrs_yields(GCM, RCP, threshold, years, protocol):
-
-        return {'title': 'Crop yield data: Post-processed GLOBIOM data', 
-                'file created by': 'M. Werning & E. Byers',
-                'contact': 'werning@iiasa.ac.at',
-                'institution': 'IIASA',
-                'date': str(datetime.now()), 
-                'original source': 'GLOBIOM data provided by Stefan Frank (frank@iiasa.ac.at)',          
-                'GCM': GCM,        
-                'scenario': RCP,
-                'warming': str(threshold),
-                'unit': 'ton/ha',
-                'years': f'{years[0]}-{years[1]}',
-                'netCDF format': netcdf4_format,
-                'software': 'File written using Python xarray'
-                }
                  
 #------------------------------------------------------------------------------
 
@@ -307,44 +249,6 @@ def cust_attrs_monthly_mean(GHM, GCM, RCP, SOC, input_var, threshold, years, pro
                 'software': 'File written using Python xarray'
                  }  
     
-#------------------------------------------------------------------------------
-
-def cust_attrs_seasonality_pr(GCM, RCP, input_var, threshold, years, protocol):
-
-        return {'title': 'Seasonality: Post-processed ISIMIP GHM data', 
-                'file created by': 'M. Werning & E. Byers',
-                'contact': 'werning@iiasa.ac.at',
-                'institution': 'IIASA',
-                'date': str(datetime.now()), 
-                'original source': f'ISIMIP{protocol} GCM data see www.isimip.org',
-                'input data': input_var,
-                'GCM': GCM,        
-                'scenario': RCP,
-                'warming': str(threshold),
-                'years': f'{years[0]}-{years[1]}',
-                'netCDF format': netcdf4_format,
-                'software': 'File written using Python xarray'
-                 }
-    
-#------------------------------------------------------------------------------
-
-def cust_attrs_iavar_pr(GCM, RCP, input_var, threshold, years, protocol):
-
-        return {'title': 'Inter-annual variability: Post-processed ISIMIP GHM data', 
-                'file created by': 'M. Werning & E. Byers',
-                'contact': 'werning@iiasa.ac.at',
-                'institution': 'IIASA',
-                'date': str(datetime.now()), 
-                'original source': f'ISIMIP{protocol} GCM data see www.isimip.org',
-                'input data': input_var,
-                'GCM': GCM,        
-                'scenario': RCP,
-                'warming': str(threshold),
-                'years': f'{years[0]}-{years[1]}',
-                'netCDF format': netcdf4_format,
-                'software': 'File written using Python xarray'
-                 }
-
 #------------------------------------------------------------------------------
 
 def cust_attrs_monthly_mean_pr(GCM, RCP, input_var, threshold, years, protocol):
@@ -396,24 +300,23 @@ def cust_attrs_mm(thresholds, protocol, variable, SOC=''):
                 'netCDF format': str(netcdf4_format),
                 'software': 'File written using Python xarray'
                 }
-
-# -----------------------------------------------------------------------------
     
-def cust_attrs_mm_lc(thresholds, protocol, variable, scen):
+#------------------------------------------------------------------------------
     
-    return {'title': 'Multi-model statistics (min, mean, median, max, stdev, rel stdev): Post-processed ISI-MIP GHM data', 
+def cust_attrs_mm_esm(thresholds, variable, protocol, ftype):
+        
+    return {'title': f'Multi-model statistics (min, mean, median, max, stdev, rel stdev) - {ftype}: Post-processed ISI-MIP GHM data', 
             'file created by': 'M. Werning, E.Byers & colleagues',
             'contact': 'werning@iiasa.ac.at',
             'institution': 'IIASA',
             'date': str(datetime.now()), 
-            'original source': 'GLOBIOM data provided by Stefan Frank (frank@iiasa.ac.at)',
+            'original source': f'ISIMIP{protocol} GCM data see www.isimip.org',
             'indicator': variable,
-            'scenario': str(scen),
             'warming': str(thresholds),
             'netCDF format': str(netcdf4_format),
             'software': 'File written using Python xarray'
             }
-    
+   
 #------------------------------------------------------------------------------
 
 def cust_attrs_diff(thresholds, protocol, variable, stats, SOC=''):
@@ -449,44 +352,6 @@ def cust_attrs_diff(thresholds, protocol, variable, stats, SOC=''):
                 'software': 'File written using Python xarray'
                 }
 
-#------------------------------------------------------------------------------
-    
-def cust_attrs_diff_lc(thresholds, protocol, variable, stats, scen):
-    
-    
-    return {'title': 'Difference between historical and future scenarios: Post-processed GLOBIOM data', 
-            'file created by': 'M. Werning, E.Byers & colleagues',
-            'contact': 'werning@iiasa.ac.at',
-            'institution': 'IIASA',
-            'date': str(datetime.now()), 
-            'original source': 'GLOBIOM data provided by Stefan Frank (frank@iiasa.ac.at)',
-            'indicator': variable,
-            'statistics': str(stats),
-            'scenario': str(scen),
-            'warming': str(thresholds),
-            'netCDF format': str(netcdf4_format),
-            'software': 'File written using Python xarray'
-            }
-
-#------------------------------------------------------------------------------
-    
-def cust_attrs_diff_yields(thresholds, protocol, variable, stats, scen):
-    
-    
-    return {'title': 'Difference between historical and future scenarios: Post-processed GLOBIOM data', 
-            'file created by': 'M. Werning, E.Byers & colleagues',
-            'contact': 'werning@iiasa.ac.at',
-            'institution': 'IIASA',
-            'date': str(datetime.now()), 
-            'original source': 'GLOBIOM data provided by Stefan Frank (frank@iiasa.ac.at)',
-            'indicator': variable,
-            'statistics': str(stats),
-            'scenario': str(scen),
-            'warming': str(thresholds),
-            'netCDF format': str(netcdf4_format),
-            'software': 'File written using Python xarray'
-            }
-    
 #------------------------------------------------------------------------------
 
 def cust_attrs_interp(thresholds, interp_thresholds, interp_int, protocol, variable, stats, SOC=''):
@@ -540,25 +405,7 @@ def cust_attrs_scores(thresholds, protocol, variable, stats, SOC=''):
                 'netCDF format': str(netcdf4_format),
                 'software': 'File written using Python xarray'
                 }  
-
-#------------------------------------------------------------------------------
-
-def cust_attrs_scores_lc(thresholds, protocol, variable, stats, scen):
-      
-    return {'title': 'Risk scores for future scenarios: Post-processed ISI-MIP GHM data', 
-            'file created by': 'M. Werning, E.Byers & colleagues',
-            'contact': 'werning@iiasa.ac.at',
-            'institution': 'IIASA',
-            'date': str(datetime.now()), 
-            'original source': f'ISIMIP{protocol} GCM data see www.isimip.org',
-            'indicator': variable,
-            'statistics': str(stats),
-            'scenario': str(scen),
-            'warming': str(thresholds),
-            'netCDF format': str(netcdf4_format),
-            'software': 'File written using Python xarray'
-            }
-    
+   
 #------------------------------------------------------------------------------
 
 def split_ind_attrs(ind, var, var_name, ssp, params, types, t, threshold, q='', d=''):
@@ -595,4 +442,24 @@ def split_ind_attrs(ind, var, var_name, ssp, params, types, t, threshold, q='', 
             'layerid': f'{var_name}_{types[t]["short"]}',
             'variable': f'{var_name}|{types[t]["short"]}',
             }
+
+#------------------------------------------------------------------------------
+
+def amend_esm_attributes(attributes, var_desc, ftype):
+    
+    attrs = attributes.copy()
+    attrs['date'] = str(datetime.now())
+    
+    if ftype == 'abs':
+        attrs['title'] = var_desc + ':' + f'{attrs["title"]} - absolute values'.split(':')[1]
+        
+    elif ftype == 'diff':
+        attrs['title'] = f'{attrs["title"]} - difference'
+        attrs['unit'] = '%'
+        
+    else:
+        attrs['title'] = f'{attrs["title"]} - scores'
+        attrs['unit'] = '-'
+        
+    return attrs
     

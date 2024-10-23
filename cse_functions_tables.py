@@ -10,6 +10,7 @@ import pandas as pd
 import glob
 import numpy as np
 from pandas.tseries.offsets import YearEnd
+import os
 
 # -----------------------------------------------------------------------------
 
@@ -32,55 +33,65 @@ def load_netcdf(file_path):
             
 #------------------------------------------------------------------------------
 
-def create_raster(file_path, raster):
+def create_raster(raster_path, regions=None, country_list=None, add_EU=False,
+                  add_world=False):
     
-    ''' Create raster for R10 regions
+    ''' Create raster files for countries or regions
     
         Arguments:
-            - file_path: path to file with region definitions
-            - raster: xarray dataset with rasters for all countries'''            
+            - raster_path: path to netcdf file with raster
+            - regions: specify regions
+            - country_list: list to filter countries
+            - add_EU: add EU to raster
+            - add_world: add world to raster
+    '''
     
-    # Read region definitions and get names of R10 regions
-    regions = pd.read_excel(file_path,)
-    r10_regions = regions.region_r10_db.unique()
-    region_mask = xr.Dataset(coords={'lon': raster.lon, 'lat': raster.lat})        
-
-    for r in r10_regions:
+    EU = ['AUT', 'BEL', 'BGR', 'HRV', 'CYP', 'CZE', 'DNK', 'EST', 'FIN',
+            'FRA', 'DEU', 'GRC', 'HUN', 'IRL', 'ITA', 'LVA', 'LTU', 'LUX',
+            'MLT', 'NLD', 'POL', 'PRT', 'ROU', 'SVK', 'SVN', 'ESP', 'SWE']
+    
+    raster = load_netcdf(raster_path)
+    
+    if raster.attrs:
+        if raster.attrs['repository'] and raster.attrs['repository'] == 'https://github.com/ISI-MIP/isipedia-countries':        
+            raster = raster.rename({i: i[2:] for i in list(raster)})  
+        raster = raster / raster['world']
+    
+    if regions is not None:
+           
+        region_list = regions['region'].unique()
+        region_list = [x for x in region_list if type(x) == str]
         
-        region_mask[r] = 0            
-        countries = regions.ISO[regions.region_r10_db==r]
-        # countries = [f'm_{c}' for c in countries]
+        region_mask = xr.Dataset(coords={'lon': raster.lon, 'lat': raster.lat}) 
         
-        # UDDATE
-        # region_mask = xr.Dataset({name: raster[name] for name in raster.keys() if name in countries})
-        
-        # Add up all countries belonging to R10 regions
-        for c in countries:
+        for r in region_list:
             
-            if c in list(raster):
-                region_mask[r] = region_mask[r] + raster[c]
-                
-    return region_mask
-                
-# -----------------------------------------------------------------------------
-
-def set_df_columns(df, variable, unit, region, years):
+            print(r)
+            region_mask[r] = 0
+            countries = regions['ISO'][regions['region']==r]
+            
+            for c in countries:
+                if c in list(raster):
+                    region_mask[r] = region_mask[r] + raster[c]          
+       
+        if add_EU == True:
+            region_mask['EU'] = 0
+            countries = regions['ISO'][regions['region'].isin(EU)]
+         
+            for c in EU:    
+                region_mask['EU'] = region_mask['EU'] + raster[c]  
     
-    ''' Set column names for dataframe
+        if add_world == True:
+            region_mask['World'] = raster.world
     
-        Arguments:
-            - df: Pandas dataframe with data
-            - variable: string with output variable
-            - unit: string with unit for output variable
-            - region: list with region names
-            - years: list with years ''' 
-    
-    df.columns = [['Variable'] + years.tolist()]
-    df['Variable'] = variable
-    df['Unit'] = unit
-    df['Region'] = region
-    
-    return df               
+        raster = region_mask
+        
+    raster = xr.where(raster == 0, np.nan, raster)
+         
+    if country_list:        
+        raster = raster[[iso for iso in country_list]]
+            
+    return raster 
 
 # -----------------------------------------------------------------------------
 
@@ -122,6 +133,40 @@ def set_unit(ftype, params):
     if ftype == 'score':
         return 'risk score'
     
+    elif ftype == 'diff':
+        return '%'
+    
     else:
         return params['unit']
 
+# -----------------------------------------------------------------------------
+
+def load_weighted_raster(raster_dir, mode):
+    
+    ''' Loads pre-calculated rasters weighted by land area or population
+    
+        Arguments:
+            - raster_dir: string with path to rasters
+            - mode: string with mode (COUNTRIES/R10/R5/IPCC)
+    '''
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_land_raster.nc4'), engine="netcdf4") as raster_land:
+        raster_land.load()
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_land_per_country.nc4'), engine="netcdf4") as land_per_cntry:
+        land_per_cntry.load()
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_weighted_land.nc4'), engine="netcdf4") as weighted_land:
+        weighted_land.load()
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_population_raster.nc4'), engine="netcdf4") as raster_pop:
+        raster_pop.load()
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_population_per_country.nc4'), engine="netcdf4") as pop_per_cntry:
+        pop_per_cntry.load()
+        
+    with xr.open_dataset(os.path.join(raster_dir, f'{mode}_weighted_population.nc4'), engine="netcdf4") as weighted_pop:
+        weighted_pop.load()
+        
+    return raster_land, land_per_cntry, weighted_land, raster_pop, pop_per_cntry, weighted_pop
+    
