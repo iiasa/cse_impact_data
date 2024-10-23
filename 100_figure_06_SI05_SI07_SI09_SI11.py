@@ -14,7 +14,7 @@ import os
 import glob
 import seaborn as sns
 import pandas as pd
-import cse_functions as cfp
+import cse_functions_pp as cfp
 
 
 #%% Settings

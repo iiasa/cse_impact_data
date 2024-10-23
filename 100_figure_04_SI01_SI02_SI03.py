@@ -11,7 +11,7 @@ sys.path.append('path_to_folder_with_repo\\paper_figures')
 import matplotlib.pyplot as plt
 import os
 import glob
-import cse_functions as cfp
+import cse_functions_pp as cfp
 import cse_plotting_funcs as cpf
 
 

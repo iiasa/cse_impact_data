@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from cmcrameri import cm
 import cse_plotting_funcs as cpf
-import cse_functions as cfp
+import cse_functions_pp as cfp
 
 
 #%% Settings
